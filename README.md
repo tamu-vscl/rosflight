@@ -1,6 +1,6 @@
 # ROSflight
 
-[![Build Status](https://travis-ci.org/rosflight/rosflight.svg?branch=master)](https://travis-ci.org/rosflight/rosflight)
+[![Build Status](http://build.ros.org/buildStatus/icon?job=Kdev__rosflight__ubuntu_xenial_amd64)](http://build.ros.org/view/Kdev/job/Kdev__rosflight__ubuntu_xenial_amd64)
 
 This repository contains the ROS stack for interfacing with an autopilot running the ROSflight firmware. For more information on the ROSflight autopilot firmware stack, visit http://rosflight.org.
 
