@@ -26,7 +26,7 @@
   <depend>rosflight_msgs</depend>
 
   <depend>eigen</depend>
-  <depend>gazebo</depend>
+  <depend>gazebo9</depend>
 
   <export>
     <gazebo_ros plugin_path="${prefix}/lib" gazebo_media_path="${prefix}" />
