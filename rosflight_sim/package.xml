@@ -18,6 +18,7 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
+  <depend>gazebo_dev</depend>
   <depend>gazebo_plugins</depend>
   <depend>gazebo_ros</depend>
   <depend>geometry_msgs</depend>
@@ -26,7 +27,6 @@
   <depend>rosflight_msgs</depend>
 
   <depend>eigen</depend>
-  <depend>gazebo</depend>
 
   <export>
     <gazebo_ros plugin_path="${prefix}/lib" gazebo_media_path="${prefix}" />
