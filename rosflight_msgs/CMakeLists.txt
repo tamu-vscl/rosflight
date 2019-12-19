@@ -11,6 +11,7 @@ add_message_files(
   DIRECTORY msg
   FILES
   OutputRaw.msg
+  OffboardOverride.msg
   RCRaw.msg
   Command.msg
   Barometer.msg
@@ -29,6 +30,7 @@ add_service_files(
   ParamFile.srv
   ParamGet.srv
   ParamSet.srv
+  DisturbInput.srv
 )
 
 generate_messages(

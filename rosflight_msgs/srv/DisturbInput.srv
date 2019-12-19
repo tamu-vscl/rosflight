@@ -1,0 +1,5 @@
+# Request Channel to disturb
+
+uint8 channel # index of PWM channel to disturb. 0 indexed.
+---
+bool finished # indicates completion of task

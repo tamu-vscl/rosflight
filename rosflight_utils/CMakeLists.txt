@@ -36,3 +36,7 @@ target_link_libraries(rosflight_postprocess ${catkin_LIBRARIES} stdc++fs)
 add_executable(viz src/viz.cpp)
 add_dependencies(viz ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(viz ${catkin_LIBRARIES})
+
+add_executable(disturbance_injector src/disturbance_injector.cpp)
+target_link_libraries(disturbance_injector ${catkin_LIBRARIES})
+add_dependencies(disturbance_injector ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})

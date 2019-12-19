@@ -1,0 +1,9 @@
+type: 0                   # OFFSET = 0, SQUARE = 1, RAMP = 2, SINE = 3
+period: 1.0               # (sec)
+frequency: 1.0            # (hz)
+amplitude: 0.0            # (% of throw (PWM value) in decemal form i.e. 0.12 = 12%)
+offset: 0.0               # (% of throw (PWM value) in decemal form i.e. 0.12 = 12%)
+length: 1.0               # (Number of periods)
+settling_time: 5.0        # (s) time between disturbing an individual channel in the disturb all service.
+arm_time_out_time: 10.0   # (s) The amount of time the system will wait for the pilot to initiate a disturbance after it was armed before it automatically disarms.
+update_rate: 100.0        # (hz) The rate at which updates are sent.
