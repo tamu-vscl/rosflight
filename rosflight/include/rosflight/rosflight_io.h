@@ -100,9 +100,9 @@ public:
   virtual void on_param_value_updated(std::string name, double value);
   virtual void on_params_saved_change(bool unsaved_changes);
 
-  static constexpr float HEARTBEAT_PERIOD = 1; //Time between heartbeat messages
-  static constexpr float VERSION_PERIOD = 10; //Time between version requests
-  static constexpr float PARAMETER_PERIOD = 3; //Time between parameter requests
+  static constexpr float HEARTBEAT_PERIOD = 1;  // Time between heartbeat messages
+  static constexpr float VERSION_PERIOD = 10;   // Time between version requests
+  static constexpr float PARAMETER_PERIOD = 3;  // Time between parameter requests
 
 private:
 

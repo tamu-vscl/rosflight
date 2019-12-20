@@ -73,7 +73,7 @@ bool DisturbanceInjector::arm_disturb_input_callback(rosflight_msgs::DisturbInpu
   param_get_client_.call(dir_svc);
   if(dir_svc.response.exists)
   {
-    ROS_WARN("Channel %i disturbance armed! Waiting for pilot to trigger disturbance.",req.channel);
+    ROS_WARN("Channel %i disturbance armed!",req.channel);
     signal_.last_update = ros::Time::now().toSec();
     while (1)
     {
@@ -87,7 +87,7 @@ bool DisturbanceInjector::arm_disturb_input_callback(rosflight_msgs::DisturbInpu
 
       if ((ros::Time::now().toSec()-signal_.last_update)>=arm_time_out_time_)
       {
-        ROS_INFO("The disturbance arm has timed out. Please re-arm the disturbance and try again.");
+        ROS_INFO("The disturbance arm has timed out.");
         signal_ = Signal();
         return res.finished;
       }
@@ -95,7 +95,7 @@ bool DisturbanceInjector::arm_disturb_input_callback(rosflight_msgs::DisturbInpu
   }
   else
   {
-    ROS_ERROR("Unable to arm disturbance due to the RC_ATT_OVRD_CHN not being set correctly.");
+    ROS_ERROR("Unable to arm disturbance. Check that the RC_ATT_OVRD_CHN is set correctly.");
     signal_ = Signal();
     return res.finished;
   }
