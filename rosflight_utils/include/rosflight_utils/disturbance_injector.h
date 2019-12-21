@@ -10,8 +10,8 @@
 
 #include <ros/ros.h>
 
+#include <rosflight_msgs/AuxCommand.h>
 #include <rosflight_msgs/DisturbInput.h>
-#include <rosflight_msgs/OffboardOverride.h>
 #include <rosflight_msgs/ParamGet.h>
 #include <rosflight_msgs/RCRaw.h>
 
@@ -55,6 +55,7 @@ private:
 
   Signal signal_;
   double arm_time_out_time_;
+  int output_type_;
 };
 
 #endif // DISTURBANCE_INJECTOR_H

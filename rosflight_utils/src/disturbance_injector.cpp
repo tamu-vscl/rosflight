@@ -49,7 +49,7 @@ int main(int argc, char **argv)
 
 DisturbanceInjector::DisturbanceInjector()
 {
-  offboard_override_pub_ = nh_.advertise<rosflight_msgs::OffboardOverride>("offboard_override",1);
+  offboard_override_pub_ = nh_.advertise<rosflight_msgs::AuxCommand>("aux_command",1);
   param_get_client_ = nh_.serviceClient<rosflight_msgs::ParamGet>("param_get");
 
   load_param();
@@ -78,8 +78,8 @@ bool DisturbanceInjector::arm_disturb_input_callback(rosflight_msgs::DisturbInpu
     while (1)
     {
       boost::shared_ptr<rosflight_msgs::RCRaw const> rc_raw_msg = ros::topic::waitForMessage<rosflight_msgs::RCRaw>("/rc_raw");
-      if((dir_svc.response.value==1  && rc_raw_msg->values[rc_svc.response.value]>900)
-      || (dir_svc.response.value==-1 && rc_raw_msg->values[rc_svc.response.value]<100))
+      if((dir_svc.response.value==-1  && rc_raw_msg->values[rc_svc.response.value]>900)
+      || (dir_svc.response.value== 1  && rc_raw_msg->values[rc_svc.response.value]<100))
       {
         ROS_WARN("Initiating disturbance on channel %i",req.channel);
         break;
@@ -102,14 +102,19 @@ bool DisturbanceInjector::arm_disturb_input_callback(rosflight_msgs::DisturbInpu
 
   ros::Rate loop_rate(signal_.update_rate);
   signal_.last_update = ros::Time::now().toSec();
-  while(!res.finished)
+  while (!res.finished)
   {
     update_signal();
-    rosflight_msgs::OffboardOverride msg;
-    msg.header.stamp = ros::Time::now();
-    msg.channel = req.channel;
-    msg.value = signal_.value;
+    rosflight_msgs::AuxCommand msg;
+    for (int i = 0;i<14;i++)
+    {
+      msg.type_array[i] = rosflight_msgs::AuxCommand::AUX_COMMAND_DISABLED;
+      msg.values[i] = 0.0;
+    }
+    msg.type_array[req.channel] = output_type_;
+    msg.values[req.channel] = signal_.value;
     offboard_override_pub_.publish(msg);
+    // TODO: include servo vs motor adjustment
     res.finished = signal_.length <= (signal_.period_count+signal_.percent_of_period);
     loop_rate.sleep();
   }
@@ -132,6 +137,7 @@ bool DisturbanceInjector::arm_disturb_all_inputs_callback(rosflight_msgs::Distur
     loop_rate.sleep();
   }
 }
+
 
 void DisturbanceInjector::update_signal()
 {
@@ -169,15 +175,15 @@ void DisturbanceInjector::load_param()
 {
   // load parameters
   nh_.param("type",signal_.type,0);
-  if(nh_.hasParam("frequency"))
+  if(nh_.hasParam("period"))
+  {
+    nh_.param("period",signal_.period,1.0);
+  }
+  else
   {
     float frequency;
     nh_.getParam("frequency",frequency);
     signal_.period = 1.0/frequency;
-  }
-  else
-  {
-    nh_.param("period",signal_.period,1.0);
   }
   nh_.param("amplitude",signal_.amplitude,0.0);
   nh_.param("offset",signal_.offset,0.0);
@@ -185,4 +191,5 @@ void DisturbanceInjector::load_param()
   nh_.param("settling_time",signal_.settling_time,5.0);
   nh_.param("arm_time_out_time",arm_time_out_time_,10.0);
   nh_.param("update_rate",signal_.update_rate,100.0);
+  nh_.param("output_type",output_type_,2);
 }

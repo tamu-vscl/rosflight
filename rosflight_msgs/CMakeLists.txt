@@ -11,7 +11,6 @@ add_message_files(
   DIRECTORY msg
   FILES
   OutputRaw.msg
-  OffboardOverride.msg
   RCRaw.msg
   Command.msg
   Barometer.msg
