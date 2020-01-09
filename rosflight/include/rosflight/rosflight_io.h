@@ -59,6 +59,7 @@
 
 #include <std_srvs/Trigger.h>
 
+#include <dfti2/dftiData.h>
 #include <rosflight_msgs/Attitude.h>
 #include <rosflight_msgs/Barometer.h>
 #include <rosflight_msgs/Airspeed.h>
@@ -171,6 +172,7 @@ private:
   ros::Publisher imu_pub_;
   ros::Publisher imu_temp_pub_;
   ros::Publisher output_raw_pub_;
+  ros::Publisher dfti_data_pub_;
   ros::Publisher rc_raw_pub_;
   ros::Publisher diff_pressure_pub_;
   ros::Publisher temperature_pub_;

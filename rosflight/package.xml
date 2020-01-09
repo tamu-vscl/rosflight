@@ -20,6 +20,7 @@
   <!-- ROS packages -->
   <depend>roscpp</depend>
   <depend>rosflight_msgs</depend>
+  <depend>dfti2</depend>
   <depend>eigen_stl_containers</depend>
   <depend>geometry_msgs</depend>
   <depend>sensor_msgs</depend>

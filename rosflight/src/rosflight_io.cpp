@@ -65,7 +65,7 @@ rosflightIO::rosflightIO()
   calibrate_rc_srv_ = nh_.advertiseService("calibrate_rc_trim", &rosflightIO::calibrateRCTrimSrvCallback, this);
   reboot_srv_ = nh_.advertiseService("reboot", &rosflightIO::rebootSrvCallback, this);
   reboot_bootloader_srv_ = nh_.advertiseService("reboot_to_bootloader", &rosflightIO::rebootToBootloaderSrvCallback, this);
-  
+
   ros::NodeHandle nh_private("~");
 
   if (nh_private.param<bool>("udp", false))
@@ -455,17 +455,27 @@ void rosflightIO::handle_rosflight_output_raw_msg(const mavlink_message_t &msg)
   mavlink_rosflight_output_raw_t servo;
   mavlink_msg_rosflight_output_raw_decode(&msg, &servo);
 
-  rosflight_msgs::OutputRaw out_msg;
-  out_msg.header.stamp = mavrosflight_->time.get_ros_time_us(servo.stamp);
-  for (int i = 0; i < 14; i++)
-  {
-    out_msg.values[i] = servo.values[i];
-  }
-
   if (output_raw_pub_.getTopic().empty())
   {
     output_raw_pub_ = nh_.advertise<rosflight_msgs::OutputRaw>("output_raw", 1);
   }
+  if (dfti_data_pub_.getTopic().empty())
+  {
+    dfti_data_pub_ = nh_.advertise<dfti2::dftiData>("dfti_data", 1000);
+  }
+
+  rosflight_msgs::OutputRaw out_msg;
+  dfti2::dftiData log_msg;
+  out_msg.header.stamp = mavrosflight_->time.get_ros_time_us(servo.stamp);
+  log_msg.header.stamp = out_msg.header.stamp;
+  for (int i = 0; i < 14; i++)
+  {
+    out_msg.values[i] = servo.values[i];
+    log_msg.data = servo.values[i];
+    log_msg.type = "servo"+std::to_string(i);
+    dfti_data_pub_.publish(log_msg);
+  }
+
   output_raw_pub_.publish(out_msg);
 }
 
