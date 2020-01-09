@@ -8,5 +8,6 @@
 <rosparam command="load" file="$(find rosflight_utils)/param/disturbance_injector.yaml"/>
 
 <node name="disturbance_injector" pkg="rosflight_utils" type="disturbance_injector" output="screen"/>
+<node name="dfti" pkg="dfti2" type="dfti" output="screen"/>
 
 </launch>
