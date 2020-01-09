@@ -467,7 +467,7 @@ void rosflightIO::handle_rosflight_output_raw_msg(const mavlink_message_t &msg)
   rosflight_msgs::OutputRaw out_msg;
   dfti2::dftiData log_msg;
   out_msg.header.stamp = mavrosflight_->time.get_ros_time_us(servo.stamp);
-  log_msg.header.stamp = out_msg.header.stamp;
+  log_msg.header.stamp = ros::Time::now();
   for (int i = 0; i < 14; i++)
   {
     out_msg.values[i] = servo.values[i];
@@ -677,7 +677,7 @@ void rosflightIO::handle_small_range_msg(const mavlink_message_t &msg)
     case ROSFLIGHT_RANGE_LIDAR:
       alt_msg.radiation_type  = sensor_msgs::Range::INFRARED;
       alt_msg.field_of_view   = .0349066; //approx 2 deg
-      
+
       if (lidar_pub_.getTopic().empty())
       {
         lidar_pub_ = nh_.advertise<sensor_msgs::Range>("lidar", 1);
