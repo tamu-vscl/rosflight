@@ -258,7 +258,7 @@ void rosflightIO::handle_status_msg(const mavlink_message_t &msg)
     if (status_msg.failsafe)
       ROS_ERROR("Autopilot FAILSAFE");
     else
-      ROS_INFO("Autopilot FAILSAFE RECOVERED");
+      ROS_INFO("Autopilot FAILSAFE RECOti_data_pub_.publish(log_msg);VERED");
   }
 
   // rc override check
@@ -414,6 +414,22 @@ void rosflightIO::handle_attitude_quaternion_msg(const mavlink_message_t &msg)
   }
   attitude_pub_.publish(attitude_msg);
   euler_pub_.publish(euler_msg);
+
+  if (dfti_data_pub_.getTopic().empty())
+  {
+    dfti_data_pub_ = nh_.advertise<dfti2::dftiData>("dfti_data", 1000);
+  }
+  dfti2::dftiData log_msg;
+  log_msg.header.stamp = ros::Time::now();
+  log_msg.data = euler_msg.vector.x;
+  log_msg.type = "phi";
+  dfti_data_pub_.publish(log_msg);
+  log_msg.data = euler_msg.vector.y;
+  log_msg.type = "theta";
+  dfti_data_pub_.publish(log_msg);
+  log_msg.data = euler_msg.vector.z;
+  log_msg.type = "psi";
+  dfti_data_pub_.publish(log_msg);
 }
 
 void rosflightIO::handle_small_imu_msg(const mavlink_message_t &msg)
@@ -448,6 +464,32 @@ void rosflightIO::handle_small_imu_msg(const mavlink_message_t &msg)
     imu_temp_pub_ = nh_.advertise<sensor_msgs::Temperature>("imu/temperature", 1);
   }
   imu_temp_pub_.publish(temp_msg);
+
+  if (dfti_data_pub_.getTopic().empty())
+  {
+    dfti_data_pub_ = nh_.advertise<dfti2::dftiData>("dfti_data", 1000);
+  }
+  dfti2::dftiData log_msg;
+  log_msg.header.stamp = ros::Time::now();
+  log_msg.data = imu.xacc;
+  log_msg.type = "u";
+  dfti_data_pub_.publish(log_msg);
+  log_msg.data = imu.yacc;
+  log_msg.type = "v";
+  dfti_data_pub_.publish(log_msg);
+  log_msg.data = imu.zacc;
+  log_msg.type = "w";
+  dfti_data_pub_.publish(log_msg);
+  log_msg.data = imu.xgyro;
+  log_msg.type = "p";
+  dfti_data_pub_.publish(log_msg);
+  log_msg.data = imu.ygyro;
+  log_msg.type = "q";
+  dfti_data_pub_.publish(log_msg);
+  log_msg.data = imu.zgyro;
+  log_msg.type = "r";
+  dfti_data_pub_.publish(log_msg);
+
 }
 
 void rosflightIO::handle_rosflight_output_raw_msg(const mavlink_message_t &msg)
@@ -471,9 +513,12 @@ void rosflightIO::handle_rosflight_output_raw_msg(const mavlink_message_t &msg)
   for (int i = 0; i < 14; i++)
   {
     out_msg.values[i] = servo.values[i];
-    log_msg.data = servo.values[i];
-    log_msg.type = "servo"+std::to_string(i);
-    dfti_data_pub_.publish(log_msg);
+    if(i<6)
+    {
+      log_msg.data = servo.values[i];
+      log_msg.type = "servo"+std::to_string(i);
+      dfti_data_pub_.publish(log_msg);
+    }
   }
 
   output_raw_pub_.publish(out_msg);
