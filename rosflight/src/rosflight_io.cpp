@@ -422,14 +422,16 @@ void rosflightIO::handle_attitude_quaternion_msg(const mavlink_message_t &msg)
   dfti2::dftiData log_msg;
   log_msg.header.stamp = ros::Time::now();
   log_msg.data = euler_msg.vector.x;
-  log_msg.type = "phi";
+  log_msg.type = "phi Roll Estimated (rad)";
   dfti_data_pub_.publish(log_msg);
   log_msg.data = euler_msg.vector.y;
-  log_msg.type = "theta";
+  log_msg.type = "theta Pitch Estimated (rad)";
   dfti_data_pub_.publish(log_msg);
-  log_msg.data = euler_msg.vector.z;
-  log_msg.type = "psi";
-  dfti_data_pub_.publish(log_msg);
+  log_msg.data = attitude_msg.angular_velocity.z;
+  log_msg.type = "psi_dot Yaw Rate Estimated (rad/s)";
+  // log_msg.data = euler_msg.vector.z;
+  // log_msg.type = "psi";
+  // dfti_data_pub_.publish(log_msg);
 }
 
 void rosflightIO::handle_small_imu_msg(const mavlink_message_t &msg)
@@ -471,23 +473,23 @@ void rosflightIO::handle_small_imu_msg(const mavlink_message_t &msg)
   }
   dfti2::dftiData log_msg;
   log_msg.header.stamp = ros::Time::now();
-  log_msg.data = imu.xacc;
-  log_msg.type = "u";
-  dfti_data_pub_.publish(log_msg);
-  log_msg.data = imu.yacc;
-  log_msg.type = "v";
-  dfti_data_pub_.publish(log_msg);
-  log_msg.data = imu.zacc;
-  log_msg.type = "w";
-  dfti_data_pub_.publish(log_msg);
-  log_msg.data = imu.xgyro;
-  log_msg.type = "p";
-  dfti_data_pub_.publish(log_msg);
-  log_msg.data = imu.ygyro;
-  log_msg.type = "q";
-  dfti_data_pub_.publish(log_msg);
+  // log_msg.data = imu.xacc;
+  // log_msg.type = "u";
+  // dfti_data_pub_.publish(log_msg);
+  // log_msg.data = imu.yacc;
+  // log_msg.type = "v";
+  // dfti_data_pub_.publish(log_msg);
+  // log_msg.data = imu.zacc;
+  // log_msg.type = "w";
+  // dfti_data_pub_.publish(log_msg);
+  // log_msg.data = imu.xgyro;
+  // log_msg.type = "p";
+  // dfti_data_pub_.publish(log_msg);
+  // log_msg.data = imu.ygyro;
+  // log_msg.type = "q";
+  // dfti_data_pub_.publish(log_msg);
   log_msg.data = imu.zgyro;
-  log_msg.type = "r";
+  log_msg.type = "psi_dot Yaw Rate Measured (rad/s)";
   dfti_data_pub_.publish(log_msg);
 
 }
@@ -513,10 +515,10 @@ void rosflightIO::handle_rosflight_output_raw_msg(const mavlink_message_t &msg)
   for (int i = 0; i < 14; i++)
   {
     out_msg.values[i] = servo.values[i];
-    if(i<6)
+    if(i<4)
     {
       log_msg.data = servo.values[i];
-      log_msg.type = "servo"+std::to_string(i);
+      log_msg.type = "delta_"+std::to_string(i)+" Servo "+std::to_string(i)+" (%)";
       dfti_data_pub_.publish(log_msg);
     }
   }
